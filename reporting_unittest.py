@@ -135,7 +135,7 @@ class ReportingTestCase(TestCase):
             mkdir(outFolder)
         imagePath = path.join(
             outFolder,
-            description + ".png"
+            str(len(self.steps) + 1) + " - " + description + ".png"
         )
         if isinstance(element, dict):
             self.driverObj.find_element(**elementIDs).screenshot(imagePath)
