@@ -138,7 +138,7 @@ class ReportingTestCase(TestCase):
             str(len(self.steps) + 1) + " - " + description + ".png"
         )
         if isinstance(element, dict):
-            self.driverObj.find_element(**elementIDs).screenshot(imagePath)
+            self.driverObj.find_element(**element).screenshot(imagePath)
         elif isinstance(element, WebElement):
             element.screenshot(imagePath)
         else:

@@ -1,5 +1,7 @@
 """Exemplifies how to use the ReportingTestCase class."""
 
+from selenium.webdriver.remote.webdriver import By
+
 from reporting_unittest import ReportingTestCase
 
 
@@ -24,48 +26,72 @@ class ReportingTestCaseExample(ReportingTestCase):
     def test_a(self):
         """Perform test logic."""
         self.reportEvent(
-            eventDescription="event report",
-            warning=False
+            eventDescription="login page loaded",
+            warning=False,
+            element='screen'
         )
         self.reportEvent(
-            eventDescription="warning report with optional data parameter",
+            eventDescription="warning you that nothing has happened!",
             warning=True,
-            data=['a', 'b']
+        )
+        self.driverObj.find_element(
+            By.ID,
+            "user-name"
+        ).send_keys(
+            self.data["login"]
+        )
+        self.reportEvent(
+            eventDescription="username field filled",
+            warning=False,
+            data=['login'],
+            element={"by": By.ID, "value": 'user-name'},
+            imageEmbed=True
+        )
+        passwordElement = self.driverObj.find_element(
+            By.ID,
+            "password"
+        )
+        passwordElement.send_keys(
+            self.data["password"]
+        )
+        self.reportEvent(
+            "password field filled",
+            data=['password'],
+            element=passwordElement,
+            imageEmbed=True
         )
         self.reportStep(
-            "positive step report with optional data parameter",
-            "expected",
-            "failure",
-            True,
-            data=['a', 'b']
+            stepDescription="A positive step: login and password fields filled!",
+            expectedBehavior="You will see this twice",
+            failureBehavior="No one can see me",
+            testStatus=True,
+            data=['login', 'password']
         )
         self.reportStep(
-            "negative step report",
-            "expected",
-            "failure",
+            "A negative step: nothing bad happened, just saying.",
+            "I expect this",
+            "I did not expect this",
             False,
         )
         self.assertTrue(
-            self.data['a'] == self.data['b'],
-            "assertive step report",
-            "expected behavior string",
-            "failure behavior string",
-            data=['a', 'b']
+            self.data['password'] == 'secret_sauce',
+            f"assertive step report - password == 'secret_sauce' -> {self.data['password'] == 'secret_sauce'}",
+            "Values are the same",
+            "Values are not the same"
         )
         self.assertFalse(
-            self.data['a'] == self.data['b'],
-            "assertive negative assertion",
-            "expected behavior string",
-            "failure behavior string",
-            data=['a', 'b']
+            self.data['login'] == 'standard_user',
+            f"assertive negative assertion - login == 'standard_user' -> {self.data['login'] == 'standard_user'}",
+            "Values are the same",
+            "Values are not the same"
         )
         self.reportEvent(
-            "unseen report since assertive tests will stop execution"
+            "Unseen report since assertive tests will stop execution"
         )
 
     def setUp(self):
         """Set up state for test run."""
-        pass
+        self.driverObj.get("https://www.saucedemo.com/")
 
     def tearDown(self):
         """Reset state after test run."""
@@ -100,24 +126,32 @@ if __name__ == "__main__":
         driver,
         testPath
     )
+
     # Make some test instances from child classes of ReportingTestCase
-    testOneArgs = {'a': 1, 'b': 1}
+    testOneArgs = {
+        'login': 'standard_user', 
+        'password': 'secret_sauce'
+    }
     testOne = ReportingTestCaseExample(
         "TC001",
         "Validation hello world",
         **testOneArgs
     )
+
     testTwo = ReportingTestCaseExample(
         "TC002",
         "Validation two hi world",
-        a=1,
-        b=2
+        login='problem_user',
+        password='secret_sauce'
     )
+
     # Add the tests to the test suite
     for test in [testOne, testTwo]:
         tempSuite.addTest(test)
+
     # Run the suite of tests
     tempSuite.run(tempResult)
+
     # Optionally, close the driver object
     driver.close()
     del driver
