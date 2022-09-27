@@ -182,7 +182,7 @@ class ReportingTestCase(TestCase):
         warning: bool = False,
         data: Union[list, str, None] = None,
         imageEmbed: bool = False,
-        element: Union[dict, str, None] = None
+        element: Union[dict, str, WebElement, None] = None
     ):
         """Log an untested step."""
         imagePath = None
@@ -209,7 +209,7 @@ class ReportingTestCase(TestCase):
         testStatus: bool,
         data: Union[list, str, None] = None,
         imageEmbed: bool = False,
-        element: Union[dict, str, None] = None
+        element: Union[dict, str, WebElement, None] = None
     ):
         """Add a new test step to the report."""
         imagePath = None
@@ -238,7 +238,7 @@ class ReportingTestCase(TestCase):
         failureBehavior: str,
         data: Union[list, str, None] = None,
         imageEmbed: bool = False,
-        elementIDs: Union[dict, None] = None
+        element: Union[dict, str, WebElement, None] = None
     ):
         """Test condition, halt on fail."""
         testStatus = bool(expr)
@@ -249,7 +249,7 @@ class ReportingTestCase(TestCase):
             testStatus=testStatus,
             data=data,
             imageEmbed=imageEmbed,
-            elementIDs=elementIDs
+            element=element
         )
         super().assertTrue(expr)
 
@@ -262,7 +262,7 @@ class ReportingTestCase(TestCase):
         failureBehavior: str,
         data: Union[list, str, None] = None,
         imageEmbed: bool = False,
-        elementIDs: Union[dict, None] = None
+        element: Union[dict, str, WebElement, None] = None
     ):
         """Test condition, halt on equal fail."""
         testStatus = first == second
@@ -273,7 +273,7 @@ class ReportingTestCase(TestCase):
             testStatus=testStatus,
             data=data,
             imageEmbed=imageEmbed,
-            elementIDs=elementIDs
+            element=element
         )
         super().assertEqual(first, second)
 
@@ -285,7 +285,7 @@ class ReportingTestCase(TestCase):
         failureBehavior: str,
         data: Union[list, str, None] = None,
         imageEmbed: bool = False,
-        elementIDs: Union[dict, None] = None
+        element: Union[dict, str, WebElement, None] = None
     ):
         """Test condition, halt on negative fail."""
         testStatus = not bool(expr)
@@ -296,7 +296,7 @@ class ReportingTestCase(TestCase):
             testStatus=testStatus,
             data=data,
             imageEmbed=imageEmbed,
-            elementIDs=elementIDs
+            element=element
         )
         super().assertFalse(expr)
 
@@ -309,7 +309,7 @@ class ReportingTestCase(TestCase):
         failureBehavior: str,
         data: Union[list, str, None] = None,
         imageEmbed: bool = False,
-        elementIDs: Union[dict, None] = None
+        element: Union[dict, str, WebElement, None] = None
     ):
         """Test condition, halt on unequal fail."""
         testStatus = not first == second
@@ -320,7 +320,7 @@ class ReportingTestCase(TestCase):
             testStatus=testStatus,
             data=data,
             imageEmbed=imageEmbed,
-            elementIDs=elementIDs
+            element=element
         )
         super().assertNotEqual(first, second)
 

@@ -80,40 +80,23 @@ class ReportingTestCaseExample(ReportingTestCase):
 
 if __name__ == "__main__":
     from selenium import webdriver
-    from selenium.webdriver.firefox.service import Service as FirefoxService
     from reporting_unittest import ReportingTestResult
     from reporting_unittest import ReportingTestSuite
     from reporting_unittest import SingletonWebDriver
 
     # Declare a singleton with a preferred browser driver
     # (MUST BE DONE BEFORE DECLARING ANY TEST CASES!!)
-    path_to_firefox_driver = path.join(
-        "C:",
-        "Program Files",
-        "Selenium",
-        "Webdrivers",
-        "geckdriver.exe"
-    )
-    driver = SingletonWebDriver(
-        webdriver.Firefox(
-            service=FirefoxService(executable_path=path_to_firefox_driver)
-        )
-    )
+    driver = SingletonWebDriver()
+
     # Declare an appropriate test result object
     tempResult = ReportingTestResult()
     testName = "ExampleTest"
-    testPath = path.join(
-        "C:",
-        "Users",
-        "matrixrunner",
-        "Desktop",
-        "Selenium Sprints",
-        "9-14"
-    )
+    testPath = ".\\"
+
     # Declare a test suite object to hold all of our cases
     tempSuite = ReportingTestSuite(
         testName,
-        "Doug Walter",
+        "your name here",
         driver,
         testPath
     )
