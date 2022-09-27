@@ -14,6 +14,7 @@ from unittest import TestResult
 from selenium import webdriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.edge.service import Service as EdgeService
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium.webdriver.chrome.service import Service as ChromeService
 
@@ -73,6 +74,16 @@ class SingletonWebDriver:
                         executable_path=path.join(
                             cls.driverPath,
                             "chromedriver.exe"
+                        )
+                    ),
+                    **kwargs
+                )
+            elif driverObj == 'Edge':
+                cls._instance = webdriver.Edge(
+                    service=EdgeService(
+                        executable_path=path.join(
+                            cls.driverPath,
+                            "msedgedriver.exe"
                         )
                     ),
                     **kwargs
