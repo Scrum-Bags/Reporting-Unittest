@@ -98,10 +98,8 @@ class ReportingTestCaseExample(ReportingTestCase):
         pass
 
     def runTest(self):
-        """Organize the test run."""
-        self.setUp()
+        """Tells which functions to run between setUp + tearDown"""
         self.test_a()
-        self.tearDown()
 
 
 if __name__ == "__main__":
