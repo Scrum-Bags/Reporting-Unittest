@@ -60,6 +60,15 @@ class ReportingTestCaseExample(ReportingTestCase):
             element=passwordElement,
             imageEmbed=True
         )
+        loginButton = self.driverObj.find_element(
+            By.ID,
+            "login-button"
+        )
+        self.reportEvent(
+            "login button identified",
+            element=(By.ID, "login-button"),
+            imageEmbed=True
+        )
         self.reportStep(
             stepDescription="A positive step: login and password fields filled!",
             expectedBehavior="You will see this twice",

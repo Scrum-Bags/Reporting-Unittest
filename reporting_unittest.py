@@ -124,7 +124,7 @@ class ReportingTestCase(TestCase):
 
     def _screenshot(
         self,
-        element: Union[dict, str, WebElement],
+        element: Union[dict, str, tuple, WebElement],
         description: str
     ):
         outFolder = path.join(
@@ -139,6 +139,8 @@ class ReportingTestCase(TestCase):
         )
         if isinstance(element, dict):
             self.driverObj.find_element(**element).screenshot(imagePath)
+        elif isinstance(element, tuple):
+            self.driverObj.find_element(*element).screenshot(imagePath)
         elif isinstance(element, WebElement):
             element.screenshot(imagePath)
         else:
@@ -182,7 +184,7 @@ class ReportingTestCase(TestCase):
         warning: bool = False,
         data: Union[list, str, None] = None,
         imageEmbed: bool = False,
-        element: Union[dict, str, WebElement, None] = None
+        element: Union[dict, str, tuple, WebElement, None] = None
     ):
         """Log an untested step."""
         imagePath = None
@@ -209,7 +211,7 @@ class ReportingTestCase(TestCase):
         testStatus: bool,
         data: Union[list, str, None] = None,
         imageEmbed: bool = False,
-        element: Union[dict, str, WebElement, None] = None
+        element: Union[dict, str, tuple, WebElement, None] = None
     ):
         """Add a new test step to the report."""
         imagePath = None
