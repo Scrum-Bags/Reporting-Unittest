@@ -1,0 +1,1 @@
+python3 reporting_unittest/reportingtestcase_example.py || python reporting_unittest/reportingtestcase_example.py
