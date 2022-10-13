@@ -1,5 +1,9 @@
 """Exemplifies how to use the ReportingTestCase class."""
 
+from os import walk
+from os.path import join as pjoin
+from zipfile import ZipFile
+
 from selenium.webdriver.remote.webdriver import By
 
 from reporting_unittest import ReportingTestCase
@@ -115,12 +119,17 @@ class ReportingTestCaseExample(ReportingTestCase):
 
 if __name__ == "__main__":
     from selenium import webdriver
+    from selenium.webdriver.firefox.options import Options as FFOptions
+    from selenium.webdriver.firefox.webdriver import WebDriver as FFDriver
     from reporting_unittest import ReportingTestResult
     from reporting_unittest import ReportingTestSuite
 
     # Declare a singleton with a preferred browser driver
     # (MUST BE DONE BEFORE DECLARING ANY TEST CASES!!)
-    driver = SingletonWebDriver()
+    ffoptions = FFOptions()
+    ffoptions.headless = True
+    driverObj = FFDriver(options=ffoptions)
+    driver = SingletonWebDriver(driverObj)
 
     # Declare an appropriate test result object
     tempResult = ReportingTestResult()
@@ -163,5 +172,15 @@ if __name__ == "__main__":
     # Optionally, close the driver object
     driver.close()
     del driver
+
+    # zip the report and screenshots
+    with ZipFile(testName + '.zip', 'w') as zf:
+        paths = ['.screenshots', testName + '.html']
+        for root, _, files in walk('.screenshots'):
+            for filename in files:
+                temp = pjoin(root, filename)
+                paths.append(pjoin(root, filename))
+        for path in paths:
+            zf.write(path)
 
     print(f'\nresults: {tempResult}')
