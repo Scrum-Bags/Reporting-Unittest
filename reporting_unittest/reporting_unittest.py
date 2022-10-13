@@ -6,10 +6,14 @@ from itertools import chain
 from os import mkdir
 from os import path
 from os import remove
+from os import walk
+from os.path import join as pjoin
+from shutil import rmtree
 from typing import Union
 from unittest import TestSuite
 from unittest import TestCase
 from unittest import TestResult
+from zipfile import ZipFile
 
 from selenium import webdriver
 from selenium.webdriver.remote.webelement import WebElement
@@ -77,13 +81,13 @@ class ReportingTestCase(TestCase):
         element: Union[dict, str, tuple, WebElement],
         description: str
     ):
-        outFolder = path.join(
+        outFolder = pjoin(
             '.screenshots',
             self.testCaseID
         )
         if not path.exists(outFolder):
             mkdir(outFolder)
-        imagePath = path.join(
+        imagePath = pjoin(
             outFolder,
             str(len(self.steps) + 1) + " - " + description + ".png"
         )
@@ -308,15 +312,17 @@ class ReportingTestSuite(TestSuite):
         self.outPath = outPath if outPath is not None else self.testName
         if not path.exists(self.outPath):
             mkdir(self.outPath)
-        self.screenshot_path = path.join(self.outPath, '.screenshots')
+        self.screenshot_path = pjoin(self.outPath, '.screenshots')
         if not path.exists(self.screenshot_path):
             mkdir(self.screenshot_path)
         self.testerName = testerName
         self.driver = driverSingleton
-
-    def run(self, result: TestResult = ReportingTestResult()):
-        """Run test suite, write report."""
-        resultObj = super().run(result=result)
+    
+    def writeReport(
+        self,
+        resultObj: TestResult,
+        zipReport: bool = False
+    ):
         succs = [s[0] for s in resultObj.successes]
         fails = [f[0] for f in resultObj.failures]
         errors = [e[0] for e in resultObj.errors]
@@ -324,7 +330,7 @@ class ReportingTestSuite(TestSuite):
         allTestCases = list(chain(succs, fails, errors))
         allTestCases.sort(key=lambda a: a.testCaseID)
 
-        filePath = path.join(self.outPath, self.testName + '.html')
+        filePath = pjoin(self.outPath, self.testName + '.html')
         if path.exists(filePath):
             remove(filePath)
 
@@ -496,5 +502,28 @@ class ReportingTestSuite(TestSuite):
 
             # close html and body
             outfile.write('</body></html>')
+        
+        if zipReport:
+            with ZipFile(self.testName + '.zip', 'w') as zf:
+                paths = []
+                for root, _, files in walk(self.screenshot_path):
+                    for filename in files:
+                        paths.append(pjoin(root, filename))
+                paths.append(filePath)
+                for p in paths:
+                    zf.write(p)
+                rmtree(self.screenshot_path)
+                remove(filePath)
 
+    def run(
+        self,
+        result: TestResult = ReportingTestResult(),
+        zipReport: bool = False
+    ):
+        """Run test suite, write report."""
+        resultObj = super().run(result=result)
+        self.writeReport(
+            resultObj=resultObj,
+            zipReport=zipReport
+        )
         return resultObj
