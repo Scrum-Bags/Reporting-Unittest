@@ -1,9 +1,5 @@
 """Exemplifies how to use the ReportingTestCase class."""
 
-from os import walk
-from os.path import join as pjoin
-from zipfile import ZipFile
-
 from selenium.webdriver.remote.webdriver import By
 
 from reporting_unittest import ReportingTestCase
@@ -167,20 +163,13 @@ if __name__ == "__main__":
         tempSuite.addTest(test)
 
     # Run the suite of tests
-    tempSuite.run(tempResult)
+    tempSuite.run(
+        tempResult,
+        zipReport=True
+    )
 
     # Optionally, close the driver object
     driver.close()
     del driver
-
-    # zip the report and screenshots
-    with ZipFile(testName + '.zip', 'w') as zf:
-        paths = ['.screenshots', testName + '.html']
-        for root, _, files in walk('.screenshots'):
-            for filename in files:
-                temp = pjoin(root, filename)
-                paths.append(pjoin(root, filename))
-        for path in paths:
-            zf.write(path)
 
     print(f'\nresults: {tempResult}')
