@@ -4,6 +4,8 @@ from selenium.webdriver.remote.webdriver import By
 
 from reporting_unittest import ReportingTestCase
 
+from singleton_web_driver import SingletonWebDriver
+
 
 class ReportingTestCaseExample(ReportingTestCase):
     """Performs testing logic for one case, reports."""
@@ -115,7 +117,6 @@ if __name__ == "__main__":
     from selenium import webdriver
     from reporting_unittest import ReportingTestResult
     from reporting_unittest import ReportingTestSuite
-    from reporting_unittest import SingletonWebDriver
 
     # Declare a singleton with a preferred browser driver
     # (MUST BE DONE BEFORE DECLARING ANY TEST CASES!!)
