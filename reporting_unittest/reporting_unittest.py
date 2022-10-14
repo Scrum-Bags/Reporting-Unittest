@@ -522,7 +522,7 @@ class ReportingTestSuite(TestSuite):
             outfile.write('</body></html>')
         
         if zipReport:
-            with ZipFile(self.testName + '.zip', 'w') as zf:
+            with ZipFile(pjoin(self.outPath, self.testName + '.zip'), 'w') as zf:
                 paths = []
                 for root, _, files in walk(self.screenshot_path):
                     for filename in files:
