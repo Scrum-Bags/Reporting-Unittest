@@ -524,6 +524,7 @@ class ReportingTestSuite(TestSuite):
         if zipReport:
             with ZipFile(pjoin(self.outPath, self.testName + '.zip'), 'w') as zf:
                 paths = []
+                print(f"screenshot path: {self.screenshot_path}")
                 for root, _, files in walk(self.screenshot_path):
                     for filename in files:
                         paths.append(pjoin(root, filename))
