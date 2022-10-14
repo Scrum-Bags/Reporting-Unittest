@@ -168,8 +168,9 @@ if __name__ == "__main__":
         zipReport=True
     )
 
-    # Optionally, close the driver object
+    # Close the driver object
     driver.close()
+    driver.quit()
     del driver
 
     print(f'\nresults: {tempResult}')
