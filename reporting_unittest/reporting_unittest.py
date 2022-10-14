@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from itertools import chain
+from logging import debug as logdebug
 from os import mkdir
 from os import path
 from os import remove
@@ -67,6 +68,7 @@ class ReportingTestCase(TestCase):
         testCaseDescription: str,
         methodName: str = 'runTest',
         debugPrint: bool = True,
+        debugLog: bool = True,
         **kwargs
     ):
         """Set up test case object."""
@@ -107,6 +109,10 @@ class ReportingTestCase(TestCase):
     def _conditionalDebugPrint(self, msg: str):
         if self.debugPrint:
             print(f"[{asctime()}] {msg}")
+    
+    def _conditionalLog(self, msg: str):
+        if self.debugLog:
+            logdebug(f"[{asctime()}] {msg}")
 
     def _makeDataString(
         self,
@@ -153,6 +159,7 @@ class ReportingTestCase(TestCase):
             imagePath = self._screenshot(element, eventDescription)
         dataString = self._makeDataString(data)
         self._conditionalDebugPrint(eventDescription)
+        self._conditionalLog(eventDescription)
         self.steps.append(
             _TestEvent(
                 eventDescription=eventDescription,
@@ -181,6 +188,7 @@ class ReportingTestCase(TestCase):
             imagePath = self._screenshot(element, stepDescription)
         dataString = self._makeDataString(data)
         self._conditionalDebugPrint(stepDescription)
+        self._conditionalLog(stepDescription)
         self.steps.append(
             _TestStep(
                 stepDescription=stepDescription,
