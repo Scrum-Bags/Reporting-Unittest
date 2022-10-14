@@ -165,7 +165,7 @@ if __name__ == "__main__":
     # Run the suite of tests
     tempSuite.run(
         tempResult,
-        zipReport=False
+        zipReport=True
     )
 
     # Close the driver object
