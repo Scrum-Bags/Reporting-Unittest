@@ -171,3 +171,5 @@ if __name__ == "__main__":
     # Optionally, close the driver object
     driver.close()
     del driver
+
+    print(f'\nresults: {tempResult}')
