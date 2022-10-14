@@ -79,6 +79,7 @@ class ReportingTestCase(TestCase):
         self.driverObj = SingletonWebDriver()
         self.status = 1  # 0 = FAIL, 1 = PASS, other = WARNING
         self.debugPrint = debugPrint
+        self.debugLog = debugLog
         self.steps = []
 
     def _screenshot(
