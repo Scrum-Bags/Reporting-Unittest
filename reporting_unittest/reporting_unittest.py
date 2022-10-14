@@ -9,6 +9,7 @@ from os import remove
 from os import walk
 from os.path import join as pjoin
 from shutil import rmtree
+from time import asctime
 from typing import Union
 from unittest import TestSuite
 from unittest import TestCase
@@ -65,6 +66,7 @@ class ReportingTestCase(TestCase):
         testCaseID: str,
         testCaseDescription: str,
         methodName: str = 'runTest',
+        debugPrint: bool = True,
         **kwargs
     ):
         """Set up test case object."""
@@ -74,6 +76,7 @@ class ReportingTestCase(TestCase):
         self.testCaseDescription = testCaseDescription
         self.driverObj = SingletonWebDriver()
         self.status = 1  # 0 = FAIL, 1 = PASS, other = WARNING
+        self.debugPrint = debugPrint
         self.steps = []
 
     def _screenshot(
@@ -100,6 +103,10 @@ class ReportingTestCase(TestCase):
         else:
             self.driverObj.save_screenshot(imagePath)
         return imagePath
+    
+    def _conditionalDebugPrint(self, msg: str):
+        if self.debugPrint:
+            print(f"[{asctime()}] {msg}")
 
     def _makeDataString(
         self,
@@ -108,7 +115,7 @@ class ReportingTestCase(TestCase):
         if isinstance(data, list):
             filteredRows = filter(lambda a: a in self.data.keys(), data)
             rows = [f"{k}: '{self.data[k]}'" for k in filteredRows]
-            temp = '\n'.join(rows)
+            temp = '<br>'.join(rows)
             return temp
         elif isinstance(data, str):
             return data
@@ -145,6 +152,7 @@ class ReportingTestCase(TestCase):
         if element is not None:
             imagePath = self._screenshot(element, eventDescription)
         dataString = self._makeDataString(data)
+        self._conditionalDebugPrint(eventDescription)
         self.steps.append(
             _TestEvent(
                 eventDescription=eventDescription,
@@ -172,6 +180,7 @@ class ReportingTestCase(TestCase):
         if element is not None:
             imagePath = self._screenshot(element, stepDescription)
         dataString = self._makeDataString(data)
+        self._conditionalDebugPrint(stepDescription)
         self.steps.append(
             _TestStep(
                 stepDescription=stepDescription,
@@ -517,7 +526,7 @@ class ReportingTestSuite(TestSuite):
 
     def run(
         self,
-        result: TestResult = ReportingTestResult(),
+        result: ReportingTestResult,
         zipReport: bool = False
     ):
         """Run test suite, write report."""
